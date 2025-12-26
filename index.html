@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Steal a Brainrot - Universal Premium</title>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <style>
+        :root {
+            --bg-main: #000000;
+            --ios-glass: rgba(20, 20, 20, 0.85);
+            --ios-accent: #0A84FF;
+            --ios-red: #FF3B30;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --midman-green: #25D366;
+            --verified-blue: #0BA9EE;
+        }
+
+        /* ANIMASI PREMIUM */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background: var(--bg-main);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(10, 132, 255, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(255, 59, 48, 0.1) 0px, transparent 50%);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            margin: 0; color: white; display: flex; justify-content: center; min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .app-container { 
+            width: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @media (min-width: 768px) {
+            .app-container {
+                max-width: 500px; margin: 50px auto; background: rgba(255, 255, 255, 0.03);
+                border-radius: 40px; padding: 40px; border: 1px solid var(--glass-border);
+                backdrop-filter: blur(30px); height: fit-content; box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            }
+        }
+
+        @media (max-width: 767px) {
+            .app-container { width: 100%; margin: 0; padding: 30px 20px; padding-top: env(safe-area-inset-top); min-height: 100vh; }
+        }
+
+        /* HEADER */
+        .header { margin-bottom: 30px; text-align: center; animation: slideUp 0.6s ease-out; }
+        .header h1 { 
+            font-size: 42px; font-weight: 900; letter-spacing: -1.5px; margin: 0;
+            background: linear-gradient(180deg, #fff 40%, #888 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+        .header p { color: #8e8e93; font-size: 16px; margin-top: 5px; font-weight: 500; }
+
+        /* DASHBOARD STATISTIK */
+        .dashboard { 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; 
+            animation: slideUp 0.8s ease-out;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border);
+            padding: 20px; border-radius: 24px; text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .stat-card:active { transform: scale(0.95); }
+        .stat-card i { color: #fff; margin-bottom: 10px; display: block; margin-left: auto; margin-right: auto; }
+        .stat-card div { font-size: 26px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+        .stat-card label { font-size: 11px; color: #8e8e93; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+
+        /* NAV TABS */
+        .nav-tabs { 
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); 
+            border-radius: 20px; padding: 6px; display: flex; border: 1px solid var(--glass-border); 
+            margin-bottom: 25px; animation: slideUp 1s ease-out;
+        }
+        .t-btn { 
+            flex: 1; border: none; background: transparent; color: #8E8E93; font-size: 14px; font-weight: 600; 
+            padding: 14px 0; border-radius: 16px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            display: flex; align-items: center; justify-content: center; gap: 8px; 
+        }
+        .t-btn.active { background: #fff; color: #000; box-shadow: 0 4px 15px rgba(255,255,255,0.1); }
+
+        /* LIST CONTENT */
+        .tab-pane { animation: fadeIn 0.5s ease-in; }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid var(--glass-border) !important;
+            border-radius: 20px !important;
+            padding: 16px !important;
+            margin-bottom: 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            transition: 0.3s;
+        }
+        .card:hover { transform: translateX(5px); background: rgba(255,255,255,0.08) !important; }
+        
+        .card strong { text-transform: uppercase; font-size: 15px; display: inline-flex; align-items: center; color: white; font-weight: 700; }
+        .card small { color: #8e8e93 !important; font-size: 12px; }
+
+        #list-admin .card strong::after { content: "✓"; display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; background: var(--verified-blue); color: white; font-size: 9px; font-weight: 900; border-radius: 50%; margin-left: 8px; }
+        #list-midman .card strong::after { content: "MIDMAN"; font-size: 9px; background: var(--midman-green); color: #000; padding: 2px 6px; border-radius: 4px; margin-left: 8px; font-weight: 900; }
+
+        .report-btn { 
+            background: #ffffff !important; color: #000 !important; font-weight: 700; 
+            font-size: 16px; border-radius: 18px !important; padding: 18px !important; 
+            border: none; width: 100%; cursor: pointer; margin-top: 15px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: 0.3s;
+        }
+        .report-btn:active { transform: scale(0.96); }
+
+        /* MODAL ANIMATION */
+        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); display: none; align-items: flex-end; justify-content: center; z-index: 9999; }
+        .modal-box { 
+            background: #111 !important; width: 100%; max-width: 500px; 
+            border-radius: 35px 35px 0 0 !important; padding: 40px 25px; 
+            border: 1px solid var(--glass-border) !important;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .modal-bg.active .modal-box { transform: translateY(0); }
+
+        input[type="text"], textarea { background: rgba(255, 255, 255, 0.08) !important; border: 1px solid transparent !important; color: #fff !important; border-radius: 15px !important; padding: 16px !important; width: 100%; margin-bottom: 12px !important; outline: none; box-sizing: border-box; }
+        #submitBtn { background: var(--ios-accent) !important; color: white; font-weight: 700; border-radius: 16px !important; padding: 18px !important; border: none; width: 100%; cursor: pointer; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <h1>Steal a Brainrot</h1>
+        <p>Community Guard System</p>
+    </div>
+
+    <div class="dashboard">
+        <div class="stat-card">
+            <i data-lucide="shield-alert" size="28"></i>
+            <div id="stat-scammer">0</div>
+            <label>Scammers</label>
+        </div>
+        <div class="stat-card">
+            <i data-lucide="users" size="28"></i>
+            <div id="stat-admin">0</div>
+            <label>Verified Staff</label>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <button class="t-btn active" onclick="tukarTab('admin', this)"><i data-lucide="user-check" size="18"></i> Admin</button>
+        <button class="t-btn" onclick="tukarTab('midman', this)"><i data-lucide="briefcase" size="18"></i> Midman</button>
+        <button class="t-btn" onclick="tukarTab('scammer', this)"><i data-lucide="search" size="18"></i> Scammer</button>
+    </div>
+
+    <div class="main-content">
+        <div id="admin" class="tab-pane">
+            <div id="list-admin">Loading Admin...</div>
+            <button class="report-btn" onclick="openModal()"><i data-lucide="plus-circle" size="20"></i> Report Scammer</button>
+        </div>
+        <div id="midman" class="tab-pane hidden">
+            <div id="list-midman">Loading Midman...</div>
+        </div>
+        <div id="scammer" class="tab-pane hidden">
+            <input type="text" id="search" onkeyup="cari()" placeholder="Search directory..." style="margin-bottom: 15px;">
+            <div id="list-scammer">Loading Scammers...</div>
+        </div>
+    </div>
+</div>
+
+<div id="modal" class="modal-bg" onclick="if(event.target==this) closeModal()"> 
+    <div class="modal-box">
+        <h2 style="font-size: 28px; font-weight: 800; margin: 0 0 20px; text-align: center; color: white;">New Report</h2>
+        <input type="text" id="hp_field" style="display:none !important;">
+        <input type="text" id="r_no" placeholder="Phone Number" oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0,11)">
+        <textarea id="r_reason" rows="4" placeholder="Description..."></textarea>
+        <div style="background: rgba(255,255,255,0.03); border: 1px dashed var(--glass-border); padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: center;">
+            <input type="file" id="r_file" accept="image/*" multiple style="color: #8e8e93; font-size: 14px; width: 100%;">
+        </div>
+        <button id="submitBtn" onclick="validateAndSend()">Submit Report</button>
+        <button onclick="closeModal()" style="width: 100%; margin-top: 15px; background: none; border: none; color: var(--ios-red); font-weight: 600; cursor: pointer;">Cancel</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+<script>
+    lucide.createIcons();
+
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzPq0HcIcqg0qGaKd6VKBhmwoxWfQ4DNGA1dM7b7VsFh7hmcidUTgnQnvWEkV-P2kls/exec";
+
+    function openModal() { 
+        const m = document.getElementById('modal');
+        m.style.display = 'flex'; 
+        setTimeout(() => m.classList.add('active'), 10);
+    }
+    
+    function closeModal() { 
+        const m = document.getElementById('modal');
+        m.classList.remove('active');
+        setTimeout(() => m.style.display = 'none', 400);
+    }
+
+    function tukarTab(tabId, btn) {
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
+        document.getElementById(tabId).classList.remove('hidden');
+        document.querySelectorAll('.t-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        lucide.createIcons();
+    }
+
+    // Fungsi Statistik Dashboard
+    function updateStats(data) {
+        if(!data) return;
+        let scamCount = 0;
+        let staffCount = 0;
+        Object.values(data).forEach(item => {
+            if (item.kategori === 'scammer') scamCount++;
+            if (item.kategori === 'admin' || item.kategori === 'midman') staffCount++;
+        });
+        document.getElementById('stat-scammer').innerText = scamCount;
+        document.getElementById('stat-admin').innerText = staffCount;
+    }
+
+    async function validateAndSend() {
+        const no = document.getElementById('r_no').value.trim();
+        const reason = document.getElementById('r_reason').value.trim();
+        const hp = document.getElementById('hp_field').value;
+        const fileInput = document.getElementById('r_file');
+        const btn = document.getElementById('submitBtn');
+
+        if (hp || !no || !reason || fileInput.files.length === 0) return alert("Lengkapkan maklumat.");
+
+        btn.disabled = true;
+        btn.innerText = "Processing...";
+
+        try {
+            const imagePromises = Array.from(fileInput.files).map(file => {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result.split(',')[1]);
+                    reader.readAsDataURL(file);
+                });
+            });
+
+            const base64Images = await Promise.all(imagePromises);
+            const params = new URLSearchParams();
+            params.append("no", no);
+            params.append("reason", reason);
+            params.append("images", JSON.stringify(base64Images));
+            params.append("hp_field", "");
+
+            await fetch(GAS_URL, { method: "POST", body: params });
+            alert("Laporan berjaya dihantar!");
+            location.reload();
+        } catch (e) {
+            alert("Laporan telah diproses.");
+            location.reload();
+        }
+    }
+</script>
+</body>
+</html>
