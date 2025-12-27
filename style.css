@@ -1,14 +1,125 @@
-:root { --gold: #ffcc00; --dark: #1a1a1a; }
-body { font-family: sans-serif; background: #f4f4f4; margin: 0; padding: 10px; }
-.app-container { max-width: 450px; margin: auto; background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-.header { background: var(--gold); padding: 20px; text-align: center; border-bottom: 4px solid var(--dark); }
-.nav-tabs { display: flex; background: var(--dark); }
-.t-btn { flex: 1; padding: 15px; border: none; background: none; color: white; cursor: pointer; font-weight: bold; }
+:root { 
+    --gold: #ffcc00; 
+    --dark: #1a1a1a; 
+    --glass: rgba(255, 255, 255, 0.9);
+}
+
+* { box-sizing: border-box; }
+
+body { 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+    background: #121212; /* Tukar ke gelap supaya lebih masuk dengan tema premium */
+    background-image: radial-gradient(circle at center, #2a2a2a 0%, #121212 100%);
+    margin: 0; 
+    padding: 0; 
+    color: #333;
+}
+
+/* CONTAINER - Rahsia Responsif */
+.app-container { 
+    width: 100%; 
+    max-width: 480px; /* Saiz ideal untuk nampak macam 'App' kat PC */
+    margin: 0 auto; 
+    background: white; 
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+}
+
+/* Bila buka kat PC (Skrin besar) */
+@media (min-width: 768px) {
+    body { padding: 40px 0; }
+    .app-container { 
+        min-height: 80vh; 
+        border-radius: 20px; 
+        overflow: hidden;
+    }
+}
+
+.header { 
+    background: var(--gold); 
+    padding: 30px 20px; 
+    text-align: center; 
+    border-bottom: 5px solid var(--dark); 
+}
+
+.header h1 { margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 1px; }
+
+.nav-tabs { display: flex; background: var(--dark); position: sticky; top: 0; z-index: 10; }
+
+.t-btn { 
+    flex: 1; 
+    padding: 15px; 
+    border: none; 
+    background: none; 
+    color: #888; 
+    cursor: pointer; 
+    font-weight: bold; 
+    transition: 0.3s;
+}
+
 .t-btn.active { background: var(--gold); color: black; }
-.main-content { padding: 20px; min-height: 300px; }
-.card { background: #fff; border: 1px solid #ddd; padding: 10px; border-radius: 8px; margin-bottom: 10px; border-left: 5px solid var(--gold); }
+
+.main-content { padding: 20px; flex-grow: 1; background: #f9f9f9; }
+
+/* CARD - Lebih kemas */
+.card { 
+    background: #fff; 
+    border: 1px solid #eee; 
+    padding: 15px; 
+    border-radius: 12px; 
+    margin-bottom: 12px; 
+    border-left: 6px solid var(--gold); 
+    display: flex;
+    align-items: center;
+    transition: 0.2s;
+}
+
+.card:active { transform: scale(0.98); }
+
 .hidden { display: none; }
-.report-btn { width: 100%; padding: 15px; background: red; color: white; border: none; border-radius: 8px; font-weight: bold; margin-top: 10px; }
-.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 100; }
-.modal-box { background: white; padding: 20px; border-radius: 10px; width: 85%; }
-input, textarea { width: 100%; padding: 10px; margin: 5px 0 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+
+.report-btn { 
+    width: 100%; 
+    padding: 16px; 
+    background: #ff3b30; 
+    color: white; 
+    border: none; 
+    border-radius: 12px; 
+    font-weight: 800; 
+    margin-top: 10px; 
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+/* MODAL - Sesuai untuk Video/Gambar */
+.modal-bg { 
+    display: none; 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0,0,0,0.85); 
+    backdrop-filter: blur(5px);
+    align-items: center; 
+    justify-content: center; 
+    z-index: 100; 
+    padding: 20px;
+}
+
+.modal-box { 
+    background: white; 
+    padding: 25px; 
+    border-radius: 20px; 
+    width: 100%; 
+    max-width: 400px; 
+}
+
+input, textarea { 
+    width: 100%; 
+    padding: 12px; 
+    margin: 8px 0 15px; 
+    border: 1px solid #ddd; 
+    border-radius: 10px; 
+    box-sizing: border-box; 
+    font-family: inherit;
+}
