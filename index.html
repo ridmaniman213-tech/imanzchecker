@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Steal a Brainrot - Universal Premium</title>
-
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -154,7 +152,7 @@
 
 <div class="app-container">
     <div class="header">
-        <h1>Checker</h1>
+        <h1>Steal a Brainrot</h1>
         <p>Community Guard System</p>
     </div>
 
@@ -199,14 +197,14 @@
         <input type="text" id="r_no" placeholder="Phone Number" oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0,11)">
         <textarea id="r_reason" rows="4" placeholder="Description..."></textarea>
         <div style="background: rgba(255,255,255,0.03); border: 1px dashed var(--glass-border); padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: center;">
-            <input type="file" id="r_file" accept="image/*,video/*" multiple style="color: #8e8e93; font-size: 14px; width: 100%;">
+            <input type="file" id="r_file" accept="image/*" multiple style="color: #8e8e93; font-size: 14px; width: 100%;">
         </div>
         <button id="submitBtn" onclick="validateAndSend()">Submit Report</button>
         <button onclick="closeModal()" style="width: 100%; margin-top: 15px; background: none; border: none; color: var(--ios-red); font-weight: 600; cursor: pointer;">Cancel</button>
     </div>
 </div>
 
-<script src="script.js?v=2.1"></script>
+<script src="script.js"></script>
 
 <script>
     lucide.createIcons();
@@ -262,16 +260,16 @@
             const imagePromises = Array.from(fileInput.files).map(file => {
                 return new Promise((resolve) => {
                     const reader = new FileReader();
-                    reader.onload = (e) => resolve({ base64: e.target.result.split(',')[1], type: file.type, name: file.name });
+                    reader.onload = (e) => resolve(e.target.result.split(',')[1]);
                     reader.readAsDataURL(file);
                 });
             });
 
-            const filesData = await Promise.all(imagePromises);
+            const base64Images = await Promise.all(imagePromises);
             const params = new URLSearchParams();
             params.append("no", no);
             params.append("reason", reason);
-            params.append("files", JSON.stringify(filesData));
+            params.append("images", JSON.stringify(base64Images));
             params.append("hp_field", "");
 
             await fetch(GAS_URL, { method: "POST", body: params });
@@ -284,10 +282,4 @@
     }
 </script>
 </body>
-
 </html>
-
-
-
-
-
