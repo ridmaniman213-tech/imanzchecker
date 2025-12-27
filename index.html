@@ -197,7 +197,7 @@
         <input type="text" id="r_no" placeholder="Phone Number" oninput="this.value = this.value.replace(/[^0-9]/g, '').substring(0,11)">
         <textarea id="r_reason" rows="4" placeholder="Description..."></textarea>
         <div style="background: rgba(255,255,255,0.03); border: 1px dashed var(--glass-border); padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: center;">
-            <input type="file" id="r_file" accept="image/*" multiple style="color: #8e8e93; font-size: 14px; width: 100%;">
+            <input type="file" id="r_file" accept="image/*,video/*" multiple style="color: #8e8e93; font-size: 14px; width: 100%;">
         </div>
         <button id="submitBtn" onclick="validateAndSend()">Submit Report</button>
         <button onclick="closeModal()" style="width: 100%; margin-top: 15px; background: none; border: none; color: var(--ios-red); font-weight: 600; cursor: pointer;">Cancel</button>
@@ -282,4 +282,5 @@
     }
 </script>
 </body>
+
 </html>
