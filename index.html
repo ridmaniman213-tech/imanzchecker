@@ -260,16 +260,16 @@
             const imagePromises = Array.from(fileInput.files).map(file => {
                 return new Promise((resolve) => {
                     const reader = new FileReader();
-                    reader.onload = (e) => resolve(e.target.result.split(',')[1]);
+                    reader.onload = (e) => resolve({ base64: e.target.result.split(',')[1], type: file.type, name: file.name });
                     reader.readAsDataURL(file);
                 });
             });
 
-            const base64Images = await Promise.all(imagePromises);
+            const filesData = await Promise.all(imagePromises);
             const params = new URLSearchParams();
             params.append("no", no);
             params.append("reason", reason);
-            params.append("images", JSON.stringify(base64Images));
+            params.append("files", JSON.stringify(filesData));
             params.append("hp_field", "");
 
             await fetch(GAS_URL, { method: "POST", body: params });
@@ -284,5 +284,6 @@
 </body>
 
 </html>
+
 
 
